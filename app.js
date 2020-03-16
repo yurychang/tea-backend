@@ -28,6 +28,7 @@ var corsOptions = {
   origin: function (origin, callback) {
     console.log('origin:' + origin);
     if (whitelist.indexOf(origin) !== -1) {
+      console.log(origin)
       callback(null, true)
     } else {
       console.log("11111")
@@ -44,25 +45,41 @@ app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-//app.use(cors(corsOptions));
-app.use('*', cors())
+app.use(cors(corsOptions));
+// app.use('*', cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/try-db', (req, res) => {
-  const sql = "SELECT `vendorPassword` from `vendordata`";
-  db.query(sql, (error, result, fields) => {
-    if (!error) {
-      res.json(result);
-    } else {
-      res.end(error);
-    }
-    console.log(result);
-  });
+
+//測試insert into
+app.post('/try-insert', (req, res) => {
+  try {
+    const data = { success: false, message: { type: 'danger', text: '' } };
+    data.body = req.body;
+    console.log('req.body', req.body)
+    const sql = "INSERT INTO vendordata(vendorAccount,vendorPassword,vendorEmail,vendorPhone) VALUE(?,?,?,?) ";
+    db.query(sql, [req.body.vendorAccount, req.body.vendorPassword, req.body.vendorEmail, req.body.vendorPhone], (error, results, fields) => {
+      if (error) { throw error }
+
+      if (results.affectedRows === 1) {
+        data.success = true;
+        data.message.type = 'primary';
+        data.message.text = '新增完成'
+      } else {
+        data.message.text = '資料沒有新增'
+      }
+      return res.json(data);
+    });
+  } catch (error) {
+    throw error
+  }
+
 });
+//測試insert into結束
+
 app.use('/users', usersRouter);
 app.use('/', indexRouter);
 
