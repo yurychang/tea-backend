@@ -1,31 +1,29 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-const db = require('./src/_connect_db');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const bodyParser = require('body-parser');
-const uelencodeParrser = bodyParser.urlencoded({ extended: false });
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const eventsRouter = require('./routes/events');
+
+const urlencodeParrser = bodyParser.urlencoded({ extended: false });
 const multer = request('multer');
 const upload =multer ({dest:'tmp_uploads'});
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
-  undefined,
-  'http://192.168.1.27:3000',
-  'http://127.0.0.1:3000',
-  'http://localhost:3939',
-  'http://127.0.0.1:3939',
-  'http://192.168.1.27:3939'
+undefined,
+'http://192.168.1.27:3000',
+'http://127.0.0.1:3000',
+'http://localhost:3939',
+'http://127.0.0.1:3939',
+'http://192.168.1.27:3939'
 ];
 
-var corsOptions = {
+const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
     console.log('origin:' + origin);
@@ -38,7 +36,10 @@ var corsOptions = {
     }
   }
 };
-app.use(uelencodeParrser);
+
+const app = express();
+
+app.use(urlencodeParrser);
 app.use(bodyParser.json());
 
 
@@ -83,6 +84,7 @@ app.post('/try-insert', (req, res) => {
 //測試insert into結束
 
 app.use('/users', usersRouter);
+app.use('/events', eventsRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
