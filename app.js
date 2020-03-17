@@ -5,25 +5,25 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 
-// const db = require('./src/_connect_db');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const eventsRouter = require('./routes/events');
 
-const app = express();
 const urlencodeParrser = bodyParser.urlencoded({ extended: false });
+const multer = request('multer');
+const upload =multer ({dest:'tmp_uploads'});
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
-  undefined,
-  'http://192.168.1.27:3000',
-  'http://127.0.0.1:3000',
-  'http://localhost:3939',
-  'http://127.0.0.1:3939',
-  'http://192.168.1.27:3939'
+undefined,
+'http://192.168.1.27:3000',
+'http://127.0.0.1:3000',
+'http://localhost:3939',
+'http://127.0.0.1:3939',
+'http://192.168.1.27:3939'
 ];
 
-var corsOptions = {
+const corsOptions = {
   credentials: true,
   origin: function (origin, callback) {
     console.log('origin:' + origin);
@@ -36,6 +36,9 @@ var corsOptions = {
     }
   }
 };
+
+const app = express();
+
 app.use(urlencodeParrser);
 app.use(bodyParser.json());
 
