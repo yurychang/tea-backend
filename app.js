@@ -8,9 +8,10 @@ const bodyParser = require('body-parser');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const eventsRouter = require('./routes/events');
+const vendorRouter = require('./routes/vendor');
 
 const urlencodeParrser = bodyParser.urlencoded({ extended: false });
-const multer = request('multer');
+const multer = require('multer');
 const upload =multer ({dest:'tmp_uploads'});
 
 const cors = require('cors');
@@ -39,6 +40,7 @@ const corsOptions = {
 
 const app = express();
 
+const db = require('./sqls/_connect_db');
 app.use(urlencodeParrser);
 app.use(bodyParser.json());
 
@@ -57,34 +59,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-//測試insert into
-app.post('/try-insert', (req, res) => {
-  try {
-    const data = { success: false, message: { type: 'danger', text: '' } };
-    data.body = req.body;
-    console.log('req.body', req.body)
-    const sql = "INSERT INTO vendordata(vendorAccount,vendorPassword,vendorEmail,vendorPhone) VALUE(?,?,?,?) ";
-    db.query(sql, [req.body.vendorAccount, req.body.vendorPassword, req.body.vendorEmail, req.body.vendorPhone], (error, results, fields) => {
-      if (error) { throw error }
 
-      if (results.affectedRows === 1) {
-        data.success = true;
-        data.message.type = 'primary';
-        data.message.text = '新增完成'
-      } else {
-        data.message.text = '資料沒有新增'
-      }
-      return res.json(data);
-    });
-  } catch (error) {
-    throw error
-  }
-
-});
-//測試insert into結束
 
 app.use('/users', usersRouter);
 app.use('/events', eventsRouter);
+app.use('/vendor', vendorRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
