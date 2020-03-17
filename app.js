@@ -12,6 +12,8 @@ var app = express();
 const db = require('./src/_connect_db');
 const bodyParser = require('body-parser');
 const uelencodeParrser = bodyParser.urlencoded({ extended: false });
+const multer = request('multer');
+const upload =multer ({dest:'tmp_uploads'});
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
