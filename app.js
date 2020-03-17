@@ -1,17 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
-
-const db = require('./src/_connect_db');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const bodyParser = require('body-parser');
-const uelencodeParrser = bodyParser.urlencoded({ extended: false });
+
+// const db = require('./src/_connect_db');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const eventsRouter = require('./routes/events');
+
+const app = express();
+const urlencodeParrser = bodyParser.urlencoded({ extended: false });
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
@@ -36,7 +36,7 @@ var corsOptions = {
     }
   }
 };
-app.use(uelencodeParrser);
+app.use(urlencodeParrser);
 app.use(bodyParser.json());
 
 
@@ -81,6 +81,7 @@ app.post('/try-insert', (req, res) => {
 //測試insert into結束
 
 app.use('/users', usersRouter);
+app.use('/events', eventsRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
