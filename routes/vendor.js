@@ -27,4 +27,31 @@ router.post('/try-insert', (req, res) => {
 
 });
 
+
+router.post('/try-logindata', (req, res) => {
+  try {
+    const data = { success: false, message: { type: 'danger', text: '' } };
+    data.body = req.body;
+    console.log('req.body', req.body)
+    const sql = "SELECT id,vendorAccount,vendorPassword FROM vendordata WHERE vendorAccount=?";
+    db.query(sql, req.body.vendorAccount, (error, results, fields) => {
+      if (error) { throw error }
+      console.log(results.length)
+      if (results.length === 1) {
+        console.log(results)
+        data.success = true;
+        data.message.type = 'primary';
+        data.message.text = '有相符資料'
+        data.vendorid=results[0].id
+      } else {
+        data.message.text = '無相符資料'
+      }
+      return res.json(data);
+    });
+  } catch (error) {
+    throw error
+  }
+
+});
+
 module.exports = router;
