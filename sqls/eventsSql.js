@@ -1,26 +1,7 @@
-const { database, username, password, host } = require(__dirname + '/../config/dbConfig');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize({
-  database,
-  username,
-  password,
-  host,
-  dialect: 'mariadb',
-  define: {
-    freezeTableName: true
-  }
-});
+const sequelize = require('./sequelize')
+const CompanySql = require('./companysSql')
 
-sequelize.sync()
-
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
 class EventsSql extends Sequelize.Model { }
 
 EventsSql.init({
@@ -54,10 +35,18 @@ EventsSql.init({
   limitNum: {
     type: Sequelize.INTEGER
   },
-  type: Sequelize.STRING(10)
+  cId: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: CompanySql,
+      key: 'id',
+    }
+  }
 }, {
   sequelize,
   modelName: 'events'
 })
+
+EventsSql.belongsTo(CompanySql, {foreignKey: 'cId'})
 
 module.exports = EventsSql

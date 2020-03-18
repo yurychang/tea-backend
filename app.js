@@ -9,19 +9,23 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const eventsRouter = require('./routes/events');
 const vendorRouter = require('./routes/vendor');
+const zonesRouter = require('./routes/zones');
+const companysRouter = require('./routes/companys');
 
 const urlencodeParrser = bodyParser.urlencoded({ extended: false });
 const multer = require('multer');
-const upload =multer ({dest:'tmp_uploads'});
+const upload = multer({ dest: 'tmp_uploads' });
+
+
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
-undefined,
-'http://192.168.1.27:3000',
-'http://127.0.0.1:3000',
-'http://localhost:3939',
-'http://127.0.0.1:3939',
-'http://192.168.1.27:3939'
+  undefined,
+  'http://192.168.1.27:3000',
+  'http://127.0.0.1:3000',
+  'http://localhost:3939',
+  'http://127.0.0.1:3939',
+  'http://192.168.1.27:3939'
 ];
 
 const corsOptions = {
@@ -64,6 +68,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users', usersRouter);
 app.use('/events', eventsRouter);
 app.use('/vendor', vendorRouter);
+app.use('/zones', zonesRouter);
+app.use('/companys', companysRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
