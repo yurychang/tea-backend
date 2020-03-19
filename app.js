@@ -12,7 +12,7 @@ const vendorRouter = require('./routes/vendor');
 const zonesRouter = require('./routes/zones');
 const companysRouter = require('./routes/companys');
 
-const urlencodeParrser = bodyParser.urlencoded({ extended: false });
+const urlencodeParser = bodyParser.urlencoded({ extended: false });
 const multer = require('multer');
 const upload = multer({ dest: 'tmp_uploads' });
 
@@ -44,8 +44,8 @@ const corsOptions = {
 
 const app = express();
 
-const db = require('./sqls/_connect_db');
-app.use(urlencodeParrser);
+const db = require('./migrates/_connect_db');
+app.use(urlencodeParser);
 app.use(bodyParser.json());
 
 

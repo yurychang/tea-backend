@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
-const CompanysSql = require('./companysSql')
+const Companys = require('./companys')
 
-class EventsSql extends Sequelize.Model { }
+class Events extends Sequelize.Model { }
 
-EventsSql.init({
+Events.init({
   title: {
     type: Sequelize.STRING(25),
     allowNull: false
@@ -38,7 +38,11 @@ EventsSql.init({
   cId: {
     type: Sequelize.INTEGER,
     references: {
+<<<<<<< HEAD:sqls/eventsSql.js
       model: CompanysSql,
+=======
+      model: Companys,
+>>>>>>> peter:migrates/events.js
       key: 'id',
     }
   }
@@ -47,6 +51,10 @@ EventsSql.init({
   modelName: 'events'
 })
 
+<<<<<<< HEAD:sqls/eventsSql.js
 EventsSql.belongsTo(CompanysSql, {foreignKey: 'cId'})
+=======
+Events.belongsTo(Companys, {foreignKey: 'cId'})
+>>>>>>> peter:migrates/events.js
 
-module.exports = EventsSql
+module.exports = Events

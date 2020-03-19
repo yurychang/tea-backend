@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { CompanysSql, ZonesSql } = require("../sqls/associations")
+const { Companys, Zones } = require("../migrates/associations")
 const Sequelize = require('sequelize')
 
 router.get('/get', async function (req, res) {
   try {
-    const zones = await ZonesSql.findAll({
+    const zones = await Zones.findAll({
       attributes: [['id', 'zId'], ['name', 'zone']],
       include: [{
-        model: CompanysSql,
+        model: Companys,
         where: { zoneId: Sequelize.col('zones.id') },
         attributes: ['id', ['username', 'name']]
       }]
