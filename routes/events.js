@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Events = require('../migrates/events')
-const EventsRegisters = require('../migrates/eventsRegisters')
-const { Companys } = require("../migrates/associations")
+const Events = require('../migrations/events')
+const EventsRegisters = require('../migrations/eventsRegisters')
+const { Companys } = require("../migrations/associations")
 const Sequelize = require('sequelize')
 
 // get Events

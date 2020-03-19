@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Companys, Zones } = require("../migrates/associations")
+const { Companys, Zones } = require("../migrations/associations")
 const Sequelize = require('sequelize')
 
 router.get('/get', async function (req, res) {

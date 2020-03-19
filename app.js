@@ -44,7 +44,7 @@ const corsOptions = {
 
 const app = express();
 
-const db = require('./migrates/_connect_db');
+const db = require('./migrations/_connect_db');
 app.use(urlencodeParser);
 app.use(bodyParser.json());
 

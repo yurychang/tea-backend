@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../migrates/_connect_db')
+const db = require('../migrations/_connect_db')
 
 // get Events
 router.post('/try-insert', (req, res) => {
