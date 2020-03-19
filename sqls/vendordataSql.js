@@ -47,6 +47,15 @@ VendordataSql.init({
   },
   vendorAddress: {
     type: Sequelize.STRING(100)
+  },
+  vendorImg: {
+    type: Sequelize.STRING(300)
+  },
+  vendorAbout: {
+    type: Sequelize.STRING(800)
+  },
+  vendorBanner: {
+    type: Sequelize.STRING(300)
   }
 },
   {
