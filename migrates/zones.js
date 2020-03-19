@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
-const CompanysSql = require('./companysSql')
 
-class ZonesSql extends Sequelize.Model { }
+class Zones extends Sequelize.Model { }
 
-ZonesSql.init({
+Zones.init({
   name: {
     type: Sequelize.STRING(10),
     allowNull: false
@@ -14,4 +13,4 @@ ZonesSql.init({
   modelName: 'zones'
 })
 
-module.exports = ZonesSql
+module.exports = Zones

@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const EventsSql = require('../sqls/eventsSql')
-const { CompanysSql } = require("../sqls/associations")
+const Events = require('../migrates/events')
+const EventsRegisters = require('../migrates/eventsRegisters')
+const { Companys } = require("../migrates/associations")
 const Sequelize = require('sequelize')
 
 // get Events
 router.get('/get', async function (req, res) {
   try {
-    const events = await EventsSql.findAll({
+    const events = await Events.findAll({
       include: [{
-        model: CompanysSql,
+        model: Companys,
         where: { id: Sequelize.col('events.cId') },
         attributes: ['id', 'username']
       }]
@@ -20,11 +21,28 @@ router.get('/get', async function (req, res) {
   }
 });
 
-router.get('/getCompanys', async function (req, res) {
+router.post('/register/post', async function (req, res) {
   try {
-    const companys = await CompanysSql.findAll({ attributes: ['id', 'username'] })
-    res.json(companys)
+    console.log(req.body)
+    res.json('register/post')
   } catch (error) {
+    res.json('err')
+  }
+})
+
+router.get('/register/get', async function (req, res) {
+  console.log(req.body)
+  try {
+    const registers = await EventsRegisters.findAll({
+      include: [{
+        model: Companys,
+        where: { id: Sequelize.col('eventregisters.cId') },
+        attributes: ['id', 'username']
+      }]
+    })
+    res.json(registers)
+  } catch (error) {
+    console.log(error)
     res.json('err')
   }
 })

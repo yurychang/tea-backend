@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
-const ZonesSql = require('./zonesSql')
+const Zones = require('./zones')
 
-class CompanysSql extends Sequelize.Model { }
+class Companys extends Sequelize.Model { }
 
-CompanysSql.init({
+Companys.init({
   username: {
     type: Sequelize.STRING(10),
     allowNull: false
@@ -13,7 +13,7 @@ CompanysSql.init({
     type: Sequelize.STRING(10),
     allowNull: false,
     references: {
-      model: ZonesSql,
+      model: Zones,
       key: 'id',
     }
   }
@@ -22,6 +22,6 @@ CompanysSql.init({
   modelName: 'companys'
 })
 
-// CompanysSql.belongsTo(ZonesSql, {foreignKey: 'zoneId'})
+// Companys.belongsTo(Zones, {foreignKey: 'zoneId'})
 
-module.exports = CompanysSql
+module.exports = Companys
