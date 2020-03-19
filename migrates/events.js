@@ -38,11 +38,7 @@ Events.init({
   cId: {
     type: Sequelize.INTEGER,
     references: {
-<<<<<<< HEAD:sqls/eventsSql.js
-      model: CompanysSql,
-=======
       model: Companys,
->>>>>>> peter:migrates/events.js
       key: 'id',
     }
   }
@@ -51,10 +47,6 @@ Events.init({
   modelName: 'events'
 })
 
-<<<<<<< HEAD:sqls/eventsSql.js
-EventsSql.belongsTo(CompanysSql, {foreignKey: 'cId'})
-=======
 Events.belongsTo(Companys, {foreignKey: 'cId'})
->>>>>>> peter:migrates/events.js
 
 module.exports = Events
