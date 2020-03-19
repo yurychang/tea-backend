@@ -10,8 +10,7 @@ CompanysSql.init({
     allowNull: false
   },
   zoneId: {
-    type: Sequelize.STRING(10),
-    allowNull: false,
+    type: Sequelize.INTEGER,
     references: {
       model: ZonesSql,
       key: 'id',
