@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const CompanysSql = require('../sqls/companysSql')
+const Companys = require('../migrations/companys')
 
 /* GET home page. */
 router.get('/get', async function (req, res) {
   try {
-    const companys = await CompanysSql.findAll({ attributes: { exclude: ['password'] } })
+    const companys = await Companys.findAll({ attributes: { exclude: ['password'] } })
     res.json(companys)
   } catch (error) {
     console.log(error)
