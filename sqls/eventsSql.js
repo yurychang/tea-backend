@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
-const CompanySql = require('./companysSql')
+const CompanysSql = require('./companysSql')
 
 class EventsSql extends Sequelize.Model { }
 
@@ -38,7 +38,7 @@ EventsSql.init({
   cId: {
     type: Sequelize.INTEGER,
     references: {
-      model: CompanySql,
+      model: CompanysSql,
       key: 'id',
     }
   }
@@ -47,6 +47,6 @@ EventsSql.init({
   modelName: 'events'
 })
 
-EventsSql.belongsTo(CompanySql, {foreignKey: 'cId'})
+EventsSql.belongsTo(CompanysSql, {foreignKey: 'cId'})
 
 module.exports = EventsSql
