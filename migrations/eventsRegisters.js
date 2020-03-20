@@ -28,15 +28,17 @@ EventsRegisters.init({
   },
   email: {
     type: Sequelize.STRING(50),
+    validate: {isEmail: true}
   },
   note: {
     type: Sequelize.STRING(200),
   },
   date: {
     type: Sequelize.STRING(20),
+    validate: {isAfter: Date()}
   },
   time: {
-    type: Sequelize.TIME,
+    type: Sequelize.TIME
   },
   num: {
     type: Sequelize.INTEGER,
