@@ -13,8 +13,7 @@ const zonesRouter = require('./routes/zones');
 const companysRouter = require('./routes/companys');
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
-const multer = require('multer');
-const upload = multer({ dest: 'tmp_uploads' });
+
 
 
 
