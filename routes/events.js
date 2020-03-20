@@ -4,7 +4,8 @@ const Events = require('../migrations/events')
 const EventsRegisters = require('../migrations/eventsRegisters')
 const { Companys } = require("../migrations/associations")
 const Sequelize = require('sequelize')
-
+const eventRegister = require('../Models/eventRegister')
+const { msgSuccess, msgFail } = require('../lib/resMsg')
 // get Events
 router.get('/get', async function (req, res) {
   try {
@@ -15,35 +16,38 @@ router.get('/get', async function (req, res) {
         attributes: ['id', 'username']
       }]
     })
-    res.json(events)
+    res.json(msgSuccess(events))
   } catch (error) {
-    res.json('err')
+    res.json(msgFail())
   }
 });
 
-router.post('/register/post', async function (req, res) {
+router.get('/register/get', async function (req, res) {
   try {
-    console.log(req.body)
-    res.json('register/post')
+    // const registers = await EventsRegisters.findAll({
+    //   include: [{
+    //     model: Companys,
+    //     where: { id: Sequelize.col('eventregisters.cId') },
+    //     attributes: ['id', 'username']
+    //   }]
+    // })
+    const registers = await EventsRegisters.findAll()
+    res.json(res.json(msgSuccess(registers)))
   } catch (error) {
-    res.json('err')
+    res.json(msgFail())
   }
 })
 
-router.get('/register/get', async function (req, res) {
-  console.log(req.body)
+router.post('/register/post', async function (req, res) {
   try {
-    const registers = await EventsRegisters.findAll({
-      include: [{
-        model: Companys,
-        where: { id: Sequelize.col('eventregisters.cId') },
-        attributes: ['id', 'username']
-      }]
-    })
-    res.json(registers)
+    const data = await eventRegister(req.body)
+    if (data) {
+      res.json(msgSuccess(data))
+    } else {
+      res.json(msgFail())
+    }
   } catch (error) {
-    console.log(error)
-    res.json('err')
+    res.json(msgFail())
   }
 })
 
