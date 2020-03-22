@@ -8,9 +8,11 @@ const bodyParser = require('body-parser');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const eventsRouter = require('./routes/events');
+const eventRegisterRouter = require('./routes/eventRegister');
 const vendorRouter = require('./routes/vendor');
 const zonesRouter = require('./routes/zones');
 const companysRouter = require('./routes/companys');
+const uploadRouter = require('./routes/upload');
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 
@@ -43,11 +45,8 @@ const corsOptions = {
 
 const app = express();
 
-const db = require('./migrations/_connect_db');
 app.use(urlencodeParser);
 app.use(bodyParser.json());
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,14 +60,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-
+// routers
 app.use('/users', usersRouter);
-app.use('/events', eventsRouter);
+app.use('/events', eventsRouter, eventRegisterRouter);
 app.use('/vendor', vendorRouter);
 app.use('/zones', zonesRouter);
 app.use('/companys', companysRouter);
+app.use('/upload', uploadRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

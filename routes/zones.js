@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Companys, Zones } = require("../migrations/associations")
 const Sequelize = require('sequelize')
-const { msgSuccess, msgFail } = require('../lib/resMsg')
+const { msgSuccess, msgFail } = require('../libs/resMsg')
 
 router.get('/get', async function (req, res) {
   try {
