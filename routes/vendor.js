@@ -17,6 +17,37 @@ router.get('/try-get', (req, res) => {
   return
 });
 
+//廠商列表取得頁面
+router.get('/getallvendor', (req, res) => {
+  const sql = "SELECT `id`,`vendorName`, `vendorZone`, `vendorImg` FROM `vendordata` WHERE 1";
+
+  db.query(sql, (error, results, fields) => {
+    if (error) throw error
+    for (i = 0; i < results.length; i++) {
+      results[i].vendorImg = "http://localhost:3333/images/" + results[i].vendorImg
+    }
+    // console.log(results)
+    res.json(results);
+  });
+  return
+});
+
+
+
+//前端取得某個廠商頁面
+router.get('/getvendorpage', (req, res) => {
+  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner`, FROM `vendordata` WHERE id='7'";
+
+  db.query(sql, (error, results, fields) => {
+    if (error) throw error
+    results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
+    results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    res.json(results);
+  });
+  return
+});
+
+
 // get Events
 //廠商註冊API
 router.post('/vendorsignup', (req, res) => {
@@ -75,11 +106,15 @@ router.post('/try-logindata', (req, res) => {
 
 //取得廠商資料API
 router.get('/getvendordata/:id', (req, res) => {
-  const sql = "SELECT `vendorName`, `vendorEmail`, `vendorPhone`, `vendorZone`, `vendorAddress`, `vendorImg` FROM `vendordata` WHERE id=?";
+  const sql = "SELECT `vendorName`, `vendorEmail`, `vendorPhone`, `vendorZone`, `vendorAddress`, `vendorImg`,`vendorAbout` ,`vendorBanner` FROM `vendordata` WHERE id=?";
   let id = req.params.id
   console.log(id)
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
+    console.log('還沒改', results)
+    results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
+    results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    console.log(results)
     res.json(results);
 
   });
@@ -91,7 +126,7 @@ router.get('/getvendordata/:id', (req, res) => {
 
 
 //更新廠商資料API
-// var dataUpload = upload.fields([{ name: 'vendorName' }, { name: 'vendorEmail'}, { name: 'vendorPhone'}, { name: 'vendorZone'},{name:'vendorAddress'},{name:'vendorImg'}])
+
 router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
   let venderObj = {
     vendorName: req.body.vendorName,
@@ -115,7 +150,6 @@ router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
             } else {
               data.success = true;
               data.message.imgmsg = '';
-
             }
           });
           break;
@@ -124,7 +158,7 @@ router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
             data.message.imgmsg = '不接受式這種檔案格';
           });
       }
-      req.file.path = './public/images/' + req.file.originalname
+      req.file.path = req.file.originalname
       venderObj['vendorImg'] = req.file.path
     } else {
       data.success = true;
@@ -154,19 +188,43 @@ router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
 //更新關於我跟Banner
 
 router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
+  let venderObj = {
+    vendorAbout: req.body.vendorAbout,
+  }
   try {
     const data = { success: false, message: { type: 'danger', text: '', url: '', imgmsg: '' } };
-    // console.log(dbUpload.name)
-    // console.log('req.body', req.body)
-    // console.log('req.file', req.file)
-    // console.log('req.files', req.files)
-    const sql = "UPDATE vendordata SET  vendorAbout=?, vendorBanner=? WHERE id=?";
-    return;
-    db.query(sql, [req.body.vendorName, req.body.vendorEmail, req.body.vendorPhone, req.body.vendorZone, req.body.vendorAddress, req.body.vendorImg, req.body.vendorImg, req.body.vendorbout, req.body.vendorBanner, req.body.vendorId], (error, results, fields) => {
+    if (req.file) {
+      switch (req.file.mimetype) {
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/gif':
+        case undefined:
+          fs.rename(req.file.path, './public/images/' + req.file.originalname, error => {
+            if (error) {
+              data.success = false;
+              data.message.imgmsg = '無法搬動檔案';
+            } else {
+              data.success = true;
+              data.message.imgmsg = '';
+            }
+          });
+          break;
+        default:
+          fs.unlink(req.file.path, error => {
+            data.message.imgmsg = '不接受式這種檔案格';
+          });
+      }
+      req.file.path = req.file.originalname
+      venderObj['vendorBanner'] = req.file.path
+    } else {
+      data.success = true;
+      data.message.imgmsg = '';
+    }
+    const sql = "UPDATE vendordata SET ?  WHERE id=?";
+    db.query(sql, [venderObj, req.body.localId], (error, results, fields) => {
       if (error) { throw error }
-      console.log()
       if (results.length === 1) {
-        console.log(results)
+        // console.log('results',results)
         data.success = true;
         data.message.type = 'primary';
         data.message.text = '更新成功'
