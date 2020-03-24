@@ -12,6 +12,7 @@ const eventRegisterRouter = require('./routes/eventRegister');
 const vendorRouter = require('./routes/vendor');
 const zonesRouter = require('./routes/zones');
 const companysRouter = require('./routes/companys');
+const flavorRouter = require('./routes/flavor');
 const uploadRouter = require('./routes/upload');
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
@@ -66,6 +67,7 @@ app.use('/events', eventsRouter, eventRegisterRouter);
 app.use('/vendor', vendorRouter);
 app.use('/zones', zonesRouter);
 app.use('/companys', companysRouter);
+app.use('/flavor', flavorRouter);
 app.use('/upload', uploadRouter);
 app.use('/', indexRouter);
 
