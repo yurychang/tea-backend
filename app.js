@@ -11,6 +11,8 @@ const indexRouter = require('./routes/index');
 // const vendorRouter = require('./routes/vendor');
 // const zonesRouter = require('./routes/zones');
 // const companysRouter = require('./routes/companys');
+const memberRouter = require('./routes/member')
+
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 
@@ -62,6 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/vendor', vendorRouter);
 // app.use('/zones', zonesRouter);
 // app.use('/companys', companysRouter);
+app.use('/member', memberRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
