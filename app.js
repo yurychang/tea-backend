@@ -6,16 +6,13 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const eventsRouter = require('./routes/events');
-const vendorRouter = require('./routes/vendor');
-const zonesRouter = require('./routes/zones');
-const companysRouter = require('./routes/companys');
+// const usersRouter = require('./routes/users');
+// const eventsRouter = require('./routes/events');
+// const vendorRouter = require('./routes/vendor');
+// const zonesRouter = require('./routes/zones');
+// const companysRouter = require('./routes/companys');
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
-
-
-
 
 const cors = require('cors');
 var whitelist = ['http://localhost:3000',
@@ -43,7 +40,6 @@ const corsOptions = {
 
 const app = express();
 
-const db = require('./migrations/_connect_db');
 app.use(urlencodeParser);
 app.use(bodyParser.json());
 
@@ -61,11 +57,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', usersRouter);
-app.use('/events', eventsRouter);
-app.use('/vendor', vendorRouter);
-app.use('/zones', zonesRouter);
-app.use('/companys', companysRouter);
+// app.use('/users', usersRouter);
+// app.use('/events', eventsRouter);
+// app.use('/vendor', vendorRouter);
+// app.use('/zones', zonesRouter);
+// app.use('/companys', companysRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
