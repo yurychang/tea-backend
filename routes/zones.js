@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Companys, Zones } = require("../migrations/associations")
 const Sequelize = require('sequelize')
+const { msgSuccess, msgFail } = require('../lib/resMsg')
 
 router.get('/get', async function (req, res) {
   try {
@@ -13,10 +14,9 @@ router.get('/get', async function (req, res) {
         attributes: ['id', ['username', 'name']]
       }]
     })
-    res.json(zones)
+    res.json(msgSuccess(zones))
   } catch (error) {
-    console.log(error)
-    res.json('err')
+    res.json(msgFail())
   }
 })
 
