@@ -36,12 +36,26 @@ router.get('/getallvendor', (req, res) => {
 
 //前端取得某個廠商頁面
 router.get('/getvendorpage', (req, res) => {
-  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner`, FROM `vendordata` WHERE id='7'";
+  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner` FROM `vendordata` WHERE id='11'";
 
   db.query(sql, (error, results, fields) => {
     if (error) throw error
     results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
     results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    console.log(results);
+    res.json(results);
+  });
+  return
+});
+
+//後端預覽廠商前台API
+router.get('/previewvendor/:id', (req, res) => {
+  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner` FROM `vendordata` WHERE id=?";
+  db.query(sql, req.params.id, (error, results, fields) => {
+    if (error) throw error
+    results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
+    results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    console.log(results);
     res.json(results);
   });
   return
@@ -238,6 +252,42 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
   }
 
 });
+//更新關於我跟Banner區結束
+
+
+//取得廠商訂單API(列表)
+router.get('/getvendorderlist/:id', (req, res) => {
+  const sql = "SELECT `memberId`, `vendorId`, `totalPrice`, `coupon` FROM `orderdata` WHERE vendorId=?";
+  let id = req.params.id
+  console.log(id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
+
+
+
+//取得廠商訂單API(詳細)
+router.get('/getvendorder/:id', (req, res) => {
+  const sql = "SELECT orderdata.id , orderdata.memberId ,orderdetail.productName ,orderdetail.productPrice ,orderdetail.productAmount FROM orderdata INNER JOIN orderdetail ON orderdata.id=orderdetail.orderId WHERE vendorId=?";
+  let id = req.params.id
+  console.log(id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 
 
 module.exports = router;
