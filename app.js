@@ -12,6 +12,9 @@ const vendorRouter = require("./routes/vendor");
 const zonesRouter = require("./routes/zones");
 const companysRouter = require("./routes/companys");
 const productRouter = require("./routes/product");
+const flavorRouter = require('./routes/flavor');
+const uploadRouter = require('./routes/upload');
+// const memberRouter = require('./routes/member')
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 const multer = require("multer");
@@ -65,6 +68,9 @@ app.use("/vendor", vendorRouter);
 app.use("/zones", zonesRouter);
 app.use("/companys", companysRouter);
 app.use("/product", productRouter);
+app.use('/flavor', flavorRouter);
+app.use('/upload', uploadRouter);
+// app.use('/member', memberRouter);
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler

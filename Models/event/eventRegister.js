@@ -1,4 +1,4 @@
-const eventsRegisters = require('../migrations/eventsRegisters')
+const eventsRegisters = require('../../migrations/eventsRegisters')
 
 async function eventRegister(data) {
   try {
