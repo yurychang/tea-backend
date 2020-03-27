@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const EventsRegisters = require('../migrations/eventsRegisters')
+const { EventsRegisters } = require('../migrations/associations')
 const Sequelize = require('sequelize')
 const eventRegister = require('../Models/event/eventRegister')
 const { msgSuccess, msgFail } = require('../libs/resMsg')

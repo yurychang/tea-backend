@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Companys = require('../migrations/companys')
+const { Companys } = require('../migrations/associations')
 
 /* GET home page. */
 router.get('/get', async function (req, res) {

@@ -14,7 +14,7 @@ EventsRegisters.init({
     }
   },
   eId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(10),
     references: {
       model: Events,
       key: 'id',

@@ -10,7 +10,7 @@ OuterFlavor.init({
     allowNull: false
   },
   innerId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(10),
     references: {
       model: InnerFlavor,
       key: 'id',
