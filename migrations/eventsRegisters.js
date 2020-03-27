@@ -48,7 +48,7 @@ EventsRegisters.init({
   modelName: 'eventregisters'
 })
 
-EventsRegisters.belongsTo(Companys, {foreignKey: 'cId'})
+EventsRegisters.belongsTo(Companys, {foreignKey: 'cId'}, )
 EventsRegisters.belongsTo(Events, {foreignKey: 'eId'})
 
 module.exports = EventsRegisters

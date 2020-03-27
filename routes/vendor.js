@@ -4,6 +4,7 @@ const db = require('../migrations/_connect_db')
 const multer = require('multer');
 const upload = multer({ dest: 'tmp_uploads' });
 const fs = require('fs');
+const vendorVerification = require('../middlewar/vendorVerification')
 
 
 router.get('/try-get', (req, res) => {
@@ -36,12 +37,26 @@ router.get('/getallvendor', (req, res) => {
 
 //前端取得某個廠商頁面
 router.get('/getvendorpage', (req, res) => {
-  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner`, FROM `vendordata` WHERE id='7'";
+  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner` FROM `vendordata` WHERE id='11'";
 
   db.query(sql, (error, results, fields) => {
     if (error) throw error
     results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
     results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    console.log(results);
+    res.json(results);
+  });
+  return
+});
+
+//後端預覽廠商前台API
+router.get('/previewvendor/:id', (req, res) => {
+  const sql = "SELECT `vendorName`, `vendorPhone`, `vendorZone`, `vendorImg`, `vendorAbout`, `vendorBanner` FROM `vendordata` WHERE id=?";
+  db.query(sql, req.params.id, (error, results, fields) => {
+    if (error) throw error
+    results[0].vendorImg = "http://localhost:3333/images/" + results[0].vendorImg
+    results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
+    console.log(results);
     res.json(results);
   });
   return
@@ -84,7 +99,6 @@ router.post('/try-logindata', (req, res) => {
     const sql = "SELECT id,vendorAccount,vendorPassword FROM vendordata WHERE vendorAccount=?";
     db.query(sql, req.body.vendorAccount, (error, results, fields) => {
       if (error) { throw error }
-      console.log(results.length)
       if (results.length === 1) {
         console.log(results)
         if (req.body.vendorPassword === results[0].vendorPassword) {
@@ -92,6 +106,9 @@ router.post('/try-logindata', (req, res) => {
           data.message.type = 'primary';
           data.message.text = '有相符資料'
           data.vendorid = results[0].id
+          req.session.vendorOnlyId = data.vendorid
+          console.log('登入設的session', req.session.vendorOnlyId)
+
         }
       } else {
         data.message.text = '無相符資料'
@@ -105,10 +122,10 @@ router.post('/try-logindata', (req, res) => {
 });
 
 //取得廠商資料API
-router.get('/getvendordata/:id', (req, res) => {
+router.get('/getvendordata', vendorVerification, (req, res) => {
   const sql = "SELECT `vendorName`, `vendorEmail`, `vendorPhone`, `vendorZone`, `vendorAddress`, `vendorImg`,`vendorAbout` ,`vendorBanner` FROM `vendordata` WHERE id=?";
-  let id = req.params.id
-  console.log(id)
+  let id = req.session.vendorOnlyId
+  console.log('從session抓出來的', id)
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
     console.log('還沒改', results)
@@ -164,8 +181,9 @@ router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
       data.success = true;
       data.message.imgmsg = '';
     }
+    let id = req.session.vendorOnlyId
     const sql = "UPDATE vendordata SET ?  WHERE id=?";
-    db.query(sql, [venderObj, req.body.localId], (error, results, fields) => {
+    db.query(sql, [venderObj, id], (error, results, fields) => {
       if (error) { throw error }
       if (results.length === 1) {
         // console.log('results',results)
@@ -238,6 +256,40 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
   }
 
 });
+//更新關於我跟Banner區結束
+
+
+//取得廠商訂單API(列表)
+router.get('/getvendorderlist',vendorVerification, (req, res) => {
+  const sql = "SELECT `id`,`memberId`, `vendorId`, `totalPrice`,`orderId` FROM `orderdata` WHERE vendorId=?";
+  let id = req.session.vendorOnlyId
+  console.log(id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
+
+
+
+//取得廠商訂單API(單筆詳細)
+router.get('/getvendororder/:orderid', (req, res) => {
+  const sql = "SELECT orderdata.id , orderdata.memberId ,orderdetail.productName ,orderdetail.productPrice ,orderdetail.productAmount FROM orderdata INNER JOIN orderdetail ON orderdata.id=orderdetail.orderId WHERE id=?";
+  let orderid = req.params.orderid
+  console.log('orderid', orderid)
+  db.query(sql, orderid, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 
 
 module.exports = router;

@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
+const session = require('express-session');
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -23,6 +24,8 @@ const upload = multer({ dest: "tmp_uploads" });
 const cors = require("cors");
 var whitelist = [
   "http://localhost:3000",
+  "http://localhost:3333",
+  "http://127.0.0.1:3333",
   undefined,
   "http://192.168.1.27:3000",
   "http://127.0.0.1:3000",
@@ -45,7 +48,17 @@ const corsOptions = {
   }
 };
 
+
 const app = express();
+
+app.use(session({
+  // 新用戶沒有使用到 session 物件時不會建立 session 和發送 cookie saveUninitialized: false,
+  resave: false, // 沒變更內容是否強制回存
+  secret: 'ghfhjd455754dr6',
+  cookie: {
+    maxAge: 1200000, // 20分鐘，單位毫秒
+  }
+}));
 
 app.use(urlencodeParser);
 app.use(bodyParser.json());
