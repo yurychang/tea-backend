@@ -10,7 +10,7 @@ Companys.init({
     allowNull: false
   },
   zoneId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(10),
     references: {
       model: Zones,
       key: 'id',
@@ -20,7 +20,5 @@ Companys.init({
   sequelize,
   modelName: 'companys'
 })
-
-// Companys.belongsTo(Zones, {foreignKey: 'zoneId'})
 
 module.exports = Companys

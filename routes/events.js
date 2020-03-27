@@ -1,8 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const Events = require('../migrations/events')
-const { Companys } = require("../migrations/associations")
+const { Companys, Events } = require("../migrations/associations")
 const Sequelize = require('sequelize')
 const { msgSuccess, msgFail } = require('../libs/resMsg')
 const addEvent = require('../Models/event/addEvent')

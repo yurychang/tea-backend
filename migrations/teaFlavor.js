@@ -11,32 +11,20 @@ TeaFlavor.init({
     allowNull: false
   },
   tId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(10),
     references: {
       model: TeaType,
       key: 'id',
     }
   },
   frontId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: OuterFlavor,
-      key: 'id',
-    }
+    type: Sequelize.INTEGER(10)
   },
   midId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: OuterFlavor,
-      key: 'id',
-    }
+    type: Sequelize.INTEGER(10)
   },
   endId: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: OuterFlavor,
-      key: 'id',
-    }
+    type: Sequelize.INTEGER(10)
   },
   frontText: {
     type: Sequelize.STRING(20)
@@ -46,6 +34,9 @@ TeaFlavor.init({
   },
   endText: {
     type: Sequelize.STRING(20)
+  },
+  intro: {
+    type: Sequelize.STRING(200)
   },
 }, {
   sequelize,

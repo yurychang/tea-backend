@@ -36,7 +36,7 @@ Events.init({
     type: Sequelize.INTEGER
   },
   cId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(10),
     references: {
       model: Companys,
       key: 'id',
@@ -46,7 +46,5 @@ Events.init({
   sequelize,
   modelName: 'events'
 })
-
-Events.belongsTo(Companys, {foreignKey: 'cId'})
 
 module.exports = Events

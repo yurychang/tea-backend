@@ -7,6 +7,13 @@ InnerFlavor.init({
   name: {
     type: Sequelize.STRING(10),
     allowNull: false
+  },
+  sortOrder: {
+    type: Sequelize.INTEGER(10)
+  },
+  color: {
+    type: Sequelize.STRING(10),
+    allowNull: false
   }
 }, {
   sequelize,
