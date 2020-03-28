@@ -69,10 +69,11 @@ router.post('/vendorsignup', (req, res) => {
   try {
     const data = { success: false, message: { type: 'danger', text: '' } };
     data.body = req.body;
-    console.log('req.body', req.body)
+    console.log('req.body', req.body)//傳過來的資料
     const sql = "INSERT INTO vendordata(vendorAccount,vendorPassword,vendorEmail,vendorPhone) VALUE(?,?,?,?) ";
     db.query(sql, [req.body.vendorAccount, req.body.vendorPassword, req.body.vendorEmail, req.body.vendorPhone], (error, results, fields) => {
       if (error) { throw error }
+      console.log('signupresults',results)
       if (results.affectedRows === 1) {
         data.success = true;
         data.message.type = 'primary';
@@ -144,7 +145,7 @@ router.get('/getvendordata', vendorVerification, (req, res) => {
 
 //更新廠商資料API
 
-router.post('/updatedata', upload.single('vendorImg'), (req, res) => {
+router.post('/updatedata',vendorVerification ,upload.single('vendorImg'), (req, res) => {
   let venderObj = {
     vendorName: req.body.vendorName,
     vendorEmail: req.body.vendorEmail,
@@ -289,6 +290,27 @@ router.get('/getvendororder/:orderid', (req, res) => {
   });
   return
 });
+
+//取得廠商商品API(列表)
+router.get('/getvendorproductlist',vendorVerification, (req, res) => {
+  const sql = "SELECT `id`, `title`, `tag`, `classIfy`, `price`, `unit`, `sTime`, `idVendor`, `feaTure`, `img` FROM `commodity` WHERE `idVendor`=?";
+  let id = req.session.vendorOnlyId
+  console.log(id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
+
+//廠商登出
+router.get('/logout', function (req, res) {
+  delete req.session.memberId
+  res.send('logout')
+})
 
 
 
