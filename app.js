@@ -10,6 +10,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const eventsRouter = require("./routes/events");
 const vendorRouter = require("./routes/vendor");
+const orderRouter = require("./routes/order");
 const zonesRouter = require("./routes/zones");
 const companysRouter = require("./routes/companys");
 const productRouter = require("./routes/product");
@@ -36,7 +37,7 @@ var whitelist = [
 
 const corsOptions = {
   credentials: true,
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     console.log("origin:" + origin);
     if (whitelist.indexOf(origin) !== -1) {
       console.log(origin);
@@ -78,6 +79,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/users", usersRouter);
 app.use("/events", eventsRouter);
 app.use("/vendor", vendorRouter);
+app.use("/order", orderRouter);
 app.use("/zones", zonesRouter);
 app.use("/companys", companysRouter);
 app.use("/product", productRouter);
@@ -87,12 +89,12 @@ app.use('/upload', uploadRouter);
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
