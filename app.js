@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const eventsRouter = require("./routes/events");
+const eventRegisterRouter = require("./routes/eventRegister");
 const vendorRouter = require("./routes/vendor");
 const zonesRouter = require("./routes/zones");
 const companysRouter = require("./routes/companys");
@@ -64,6 +65,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/users", usersRouter);
 app.use("/events", eventsRouter);
+app.use("/events", eventRegisterRouter);
 app.use("/vendor", vendorRouter);
 app.use("/zones", zonesRouter);
 app.use("/companys", companysRouter);

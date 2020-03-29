@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
 const Companys = require('./companys')
+const VendorData = require('./vendorData')
 const Events = require('./events')
 
 class EventsRegisters extends Sequelize.Model { }
@@ -9,7 +10,8 @@ EventsRegisters.init({
   cId: {
     type: Sequelize.INTEGER,
     references: {
-      model: Companys,
+      // model: Companys,
+      model: VendorData,
       key: 'id',
     }
   },
@@ -48,7 +50,7 @@ EventsRegisters.init({
   modelName: 'eventregisters'
 })
 
-EventsRegisters.belongsTo(Companys, {foreignKey: 'cId'})
-EventsRegisters.belongsTo(Events, {foreignKey: 'eId'})
+// EventsRegisters.belongsTo(Companys, {foreignKey: 'cId'})
+// EventsRegisters.belongsTo(Events, {foreignKey: 'eId'})
 
 module.exports = EventsRegisters
