@@ -12,7 +12,7 @@ router.get('/get', async function (req, res) {
         model: VendorData,
         as: 'companys',
         where: { zoneId: Sequelize.col('zones.id') },
-        // attributes: ['id', ['username', 'name']]
+        // attributes: ['id', ['username', 'name']] 
         attributes: ['id', ['vendorName', 'name']]
       }]
     })

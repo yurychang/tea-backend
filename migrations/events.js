@@ -17,6 +17,9 @@ Events.init({
   banner: {
     type: Sequelize.STRING(50)
   },
+  intro: {
+    type: Sequelize.STRING(30)
+  },
   content: {
     type: Sequelize.STRING(10000)
   },
