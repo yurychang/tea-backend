@@ -5,19 +5,23 @@ const OuterFlavor = require('./outerFlavor')
 const TeaFlavor = require('./teaFlavor')
 const Events = require('./events')
 const EventsRegisters = require('./eventsRegisters')
+const VendorData = require('./vendorData')
 
-Events.belongsTo(Companys, {foreignKey: 'cId', constraints: false})
+// Events.belongsTo(Companys, { foreignKey: 'cId' })
+Events.belongsTo(VendorData, { foreignKey: 'cId', as: 'companys' })
 
-EventsRegisters.belongsTo(Companys, {foreignKey: 'cId', constraints: false})
+// EventsRegisters.belongsTo(Companys, { foreignKey: 'cId' })
+EventsRegisters.belongsTo(VendorData, { foreignKey: 'cId' })
 
-EventsRegisters.belongsTo(Events, {foreignKey: 'eId', constraints: false})
+EventsRegisters.belongsTo(Events, { foreignKey: 'eId' })
 
-Companys.belongsTo(Zones, {foreignKey: 'zoneId', constraints: false})
+// Companys.belongsTo(Zones, { foreignKey: 'zoneId' })
+VendorData.belongsTo(Zones, { foreignKey: 'zoneId' })
 
-Zones.hasMany(Companys, {foreignKey: 'zoneId', constraints: false})
+// Zones.hasMany(Companys, { foreignKey: 'zoneId' })
+Zones.hasMany(VendorData, { foreignKey: 'zoneId', as: 'companys' })
 
-InnerFlavor.hasMany(OuterFlavor, {foreignKey: 'innerId', constraints: false})
-
+InnerFlavor.hasMany(OuterFlavor, { foreignKey: 'innerId' })
 
 module.exports = {
   Companys,
@@ -26,5 +30,6 @@ module.exports = {
   OuterFlavor,
   TeaFlavor,
   Events,
-  EventsRegisters
+  EventsRegisters,
+  VendorData
 }

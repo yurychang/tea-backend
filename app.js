@@ -9,6 +9,7 @@ const session = require('express-session');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const eventsRouter = require("./routes/events");
+const eventRegisterRouter = require("./routes/eventRegister");
 const vendorRouter = require("./routes/vendor");
 const orderRouter = require("./routes/order");
 const zonesRouter = require("./routes/zones");
@@ -78,6 +79,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/users", usersRouter);
 app.use("/events", eventsRouter);
+app.use("/events", eventRegisterRouter);
 app.use("/vendor", vendorRouter);
 app.use("/order", orderRouter);
 app.use("/zones", zonesRouter);
