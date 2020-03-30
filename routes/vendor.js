@@ -338,4 +338,18 @@ router.post('/BackendAddMsg',(req, res) => {
 
 });
 
+// 廠商取得訊息
+router.get('/getMsg', vendorVerification, (req, res) => {
+  const sql = "SELECT `title`, `content` FROM `noticelist` WHERE `vendorId`=?";
+  let id = req.session.vendorOnlyId
+  console.log( id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 module.exports = router;
