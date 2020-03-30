@@ -289,6 +289,19 @@ router.get('/getvendororder/:orderid', (req, res) => {
   return
 });
 
+//取得營業據點(前端頁面)
+router.get('/getvendorlocation/:vendorId', (req, res) => {
+  const sql = "SELECT `locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
+  let id = req.params.vendorId
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 //取得廠商商品API(列表)
 router.get('/getvendorproductlist', vendorVerification, (req, res) => {
   const sql = "SELECT `id`, `title`, `tag`, `classIfy`, `price`, `unit`, `sTime`, `idVendor`, `feaTure`, `img` FROM `commodity` WHERE `idVendor`=?";
@@ -315,10 +328,23 @@ router.get('/getvendorproductlistuseparam/:vendorid',  (req, res) => {
   return
 });
 
+//取得活動列表(前端列表)
+router.get('/getvendoreventlist/:vendorid',  (req, res) => {
+  const sql = "SELECT `title`, `content`, `price`, `location` FROM `events` WHERE cId=?";
+  let id = req.params.vendorid
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 
 //廠商登出
 router.get('/logout', function (req, res) {
-  delete req.session.memberId
+  delete req.session.vendorOnlyId
   res.send('logout')
 })
 
@@ -328,7 +354,7 @@ router.post('/BackendAddMsg',(req, res) => {
     const data = { success: false, message: { type: 'danger', text: '' } };
     data.body = req.body;
     console.log('req.body', req.body)
-    
+
     let id=req.session.venderOnlyId
     const sql = "INSERT INTO noticelist (vendorId,title,content,status) VALUE(?,?,?,?)";
     db.query(sql, [ req.body.vendorId, req.body.title, req.body.content, req.body.status ], (error, results, fields) => {
