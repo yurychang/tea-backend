@@ -53,18 +53,21 @@ router.get('/getvendorpage', (req, res) => {
 
 
 // get Events
-//廠商註冊API
+//訂單insert
 router.post('/neworderdata', (req, res) => {
   try {
     const data = req.body
+    console.log(data)
     let selectQuery = "SELECT id, title, price FROM commodity WHERE"
     data.detail.forEach(item => selectQuery += ` id = ${item.pId} or`)
-    const newSelectQuery = selectQuery.slice(0, selectQuery.length - 2)
+    const newSelectQuery = selectQuery.slice(0, selectQuery.length - 3)
 
     db.query(newSelectQuery, (error, results, fields) => {
       let totalPrice = 0
       const detailAry = []
+      console.log(data.detail)
       data.detail.forEach(item => {
+        console.log(results)
         results.forEach(product => {
           if (product.id === item.pId) {
             const price = item.amount * product.price
@@ -93,8 +96,6 @@ router.post('/neworderdata', (req, res) => {
       })
       // insert buy info
       // write
-
-
 
     })
 
