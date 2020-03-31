@@ -4,17 +4,18 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
+const session = require('express-session');
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const eventsRouter = require("./routes/events");
-const vendorRouter = require("./routes/vendor");
-const zonesRouter = require("./routes/zones");
-const companysRouter = require("./routes/companys");
-const productRouter = require("./routes/product");
-const flavorRouter = require('./routes/flavor');
-const uploadRouter = require('./routes/upload');
-// const memberRouter = require('./routes/member')
+// const usersRouter = require("./routes/users");
+// const eventsRouter = require("./routes/events");
+// const vendorRouter = require("./routes/vendor");
+// const zonesRouter = require("./routes/zones");
+// const companysRouter = require("./routes/companys");
+// const productRouter = require("./routes/product");
+// const flavorRouter = require('./routes/flavor');
+// const uploadRouter = require('./routes/upload');
+const memberRouter = require('./routes/member')
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 const multer = require("multer");
@@ -23,6 +24,7 @@ const upload = multer({ dest: "tmp_uploads" });
 const cors = require("cors");
 var whitelist = [
   "http://localhost:3000",
+  "http://localhost:3333",
   undefined,
   "http://192.168.1.27:3000",
   "http://127.0.0.1:3000",
@@ -47,6 +49,15 @@ const corsOptions = {
 
 const app = express();
 
+app.use(session({
+  // 新用戶沒有使用到 session 物件時不會建立 session 和發送 cookie saveUninitialized: false,
+  resave: false, // 沒變更內容是否強制回存
+  secret: 'ghfhjd455754dr6',
+  cookie: {
+    maxAge: 1200000, // 20分鐘，單位毫秒
+  }
+}));
+
 app.use(urlencodeParser);
 app.use(bodyParser.json());
 
@@ -55,22 +66,21 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(cors(corsOptions));
-// app.use('*', cors())
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/users", usersRouter);
-app.use("/events", eventsRouter);
-app.use("/vendor", vendorRouter);
-app.use("/zones", zonesRouter);
-app.use("/companys", companysRouter);
-app.use("/product", productRouter);
-app.use('/flavor', flavorRouter);
-app.use('/upload', uploadRouter);
-// app.use('/member', memberRouter);
+// app.use("/users", usersRouter);
+// app.use("/events", eventsRouter);
+// app.use("/vendor", vendorRouter);
+// app.use("/zones", zonesRouter);
+// app.use("/companys", companysRouter);
+// app.use("/product", productRouter);
+// app.use('/flavor', flavorRouter);
+// app.use('/upload', uploadRouter);
+app.use('/member', memberRouter);
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler
