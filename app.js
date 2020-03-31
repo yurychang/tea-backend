@@ -18,7 +18,7 @@ const productRouter = require("./routes/product");
 const flavorRouter = require('./routes/flavor');
 const uploadRouter = require('./routes/upload');
 const favoritesRouter = require('./routes/favorites');
-// const memberRouter = require('./routes/member')
+const memberRouter = require('./routes/member')
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 const multer = require("multer");
@@ -71,7 +71,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(cors(corsOptions));
-// app.use('*', cors())
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -89,7 +88,7 @@ app.use("/product", productRouter);
 app.use('/flavor', flavorRouter);
 app.use('/upload', uploadRouter);
 app.use('/favorite', favoritesRouter);
-// app.use('/member', memberRouter);
+app.use('/member', memberRouter);
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler
