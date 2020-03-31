@@ -1,4 +1,4 @@
-const Companys = require('./companys')
+// const Companys = require('./companys')
 const Zones = require('./zones')
 const InnerFlavor = require('./innerFlavor')
 const OuterFlavor = require('./outerFlavor')
@@ -6,6 +6,8 @@ const TeaFlavor = require('./teaFlavor')
 const Events = require('./events')
 const EventsRegisters = require('./eventsRegisters')
 const VendorData = require('./vendorData')
+const Commodity = require('./commodity')
+const Favorites = require('./favorites')
 
 // Events.belongsTo(Companys, { foreignKey: 'cId' })
 Events.belongsTo(VendorData, { foreignKey: 'cId', as: 'companys' })
@@ -23,13 +25,16 @@ Zones.hasMany(VendorData, { foreignKey: 'zoneId', as: 'companys' })
 
 InnerFlavor.hasMany(OuterFlavor, { foreignKey: 'innerId' })
 
+Favorites.belongsTo(Commodity, { foreignKey: 'pId' })
+
 module.exports = {
-  Companys,
   Zones,
   InnerFlavor,
   OuterFlavor,
   TeaFlavor,
   Events,
   EventsRegisters,
-  VendorData
+  VendorData,
+  Favorites,
+  Commodity
 }

@@ -17,6 +17,7 @@ const companysRouter = require("./routes/companys");
 const productRouter = require("./routes/product");
 const flavorRouter = require('./routes/flavor');
 const uploadRouter = require('./routes/upload');
+const favoritesRouter = require('./routes/favorites');
 // const memberRouter = require('./routes/member')
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
@@ -87,6 +88,7 @@ app.use("/companys", companysRouter);
 app.use("/product", productRouter);
 app.use('/flavor', flavorRouter);
 app.use('/upload', uploadRouter);
+app.use('/favorite', favoritesRouter);
 // app.use('/member', memberRouter);
 app.use("/", indexRouter);
 
