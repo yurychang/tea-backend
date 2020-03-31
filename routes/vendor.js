@@ -209,7 +209,7 @@ router.post('/updatedata', vendorVerification, upload.single('vendorImg'), (req,
 
 //更新關於我跟Banner
 
-router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
+router.post('/updateabout', vendorVerification, upload.single('vendorBanner'), (req, res) => {
   let venderObj = {
     vendorAbout: req.body.vendorAbout,
   }
@@ -243,7 +243,7 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
       data.message.imgmsg = '';
     }
     const sql = "UPDATE vendordata SET ?  WHERE id=?";
-    db.query(sql, [venderObj, req.body.localId], (error, results, fields) => {
+    db.query(sql, [venderObj, req.session.vendorOnlyId], (error, results, fields) => {
       if (error) { throw error }
       if (results.length === 1) {
         data.success = true;
@@ -264,11 +264,14 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
 
 //取得廠商訂單API(列表)
 router.get('/getvendorderlist', vendorVerification, (req, res) => {
-  const sql = "SELECT `id`,`memberId`, `vendorId`, `totalPrice`,`orderId` FROM `orderdata` WHERE vendorId=?";
+  const sql = "SELECT `id`,`memberId`, `vendorId`, `totalPrice`,`orderId`,`trackingCode`,`productState`,`createdAt` FROM `orderdata` WHERE vendorId=?";
   let id = req.session.vendorOnlyId
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
-    res.json(results);
+    data = results.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    });
+    res.json(data);
   });
   return
 });

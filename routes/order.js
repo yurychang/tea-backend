@@ -94,9 +94,6 @@ router.post('/neworderdata', (req, res) => {
           console.log('payInfo', results)
         })
       })
-      // insert buy info
-      // write
-
     })
 
     res.json('neworderdata')
@@ -108,7 +105,28 @@ router.post('/neworderdata', (req, res) => {
 });
 
 
-
+router.put('/updateOrder', (req, res) => {
+  try {
+    const data = { success: false, message: { type: 'danger', text: '' } };
+    const sql = "UPDATE orderdata SET ? WHERE id = ?"
+    let orderData = req.body.data;
+    db.query(sql, [orderData, req.body.id], (error, results, fields) => {
+      if (error) { throw error }
+      if (results.affectedRows === 1) {
+        // console.log('results',results)
+        data.success = true;
+        data.message.type = 'primary';
+        data.message.text = '更新成功'
+      } else {
+        data.message.text = '無更新'
+      }
+      return res.json(data);
+    });
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+})
 //廠商登入API
 router.post('/try-logindata', (req, res) => {
   try {
