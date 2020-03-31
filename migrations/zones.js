@@ -6,7 +6,6 @@ class Zones extends Sequelize.Model { }
 Zones.init({
   name: {
     type: Sequelize.STRING(10),
-    allowNull: false
   }
 }, {
   sequelize,

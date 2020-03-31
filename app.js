@@ -9,6 +9,7 @@ const session = require('express-session');
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const eventsRouter = require("./routes/events");
+const eventRegisterRouter = require("./routes/eventRegister");
 const vendorRouter = require("./routes/vendor");
 const orderRouter = require("./routes/order");
 const zonesRouter = require("./routes/zones");
@@ -16,7 +17,8 @@ const companysRouter = require("./routes/companys");
 const productRouter = require("./routes/product");
 const flavorRouter = require('./routes/flavor');
 const uploadRouter = require('./routes/upload');
-// const memberRouter = require('./routes/member')
+const favoritesRouter = require('./routes/favorites');
+const memberRouter = require('./routes/member')
 
 const urlencodeParser = bodyParser.urlencoded({ extended: false });
 const multer = require("multer");
@@ -69,7 +71,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.use(cors(corsOptions));
-// app.use('*', cors())
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -78,6 +79,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/users", usersRouter);
 app.use("/events", eventsRouter);
+app.use("/events", eventRegisterRouter);
 app.use("/vendor", vendorRouter);
 app.use("/order", orderRouter);
 app.use("/zones", zonesRouter);
@@ -85,7 +87,8 @@ app.use("/companys", companysRouter);
 app.use("/product", productRouter);
 app.use('/flavor', flavorRouter);
 app.use('/upload', uploadRouter);
-// app.use('/member', memberRouter);
+app.use('/favorite', favoritesRouter);
+app.use('/member', memberRouter);
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler

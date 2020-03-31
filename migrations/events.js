@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./sequelize')
 const Companys = require('./companys')
+const VendorData = require('./vendorData')
 
 class Events extends Sequelize.Model { }
 
@@ -15,6 +16,9 @@ Events.init({
   },
   banner: {
     type: Sequelize.STRING(50)
+  },
+  intro: {
+    type: Sequelize.STRING(30)
   },
   content: {
     type: Sequelize.STRING(10000)
@@ -38,7 +42,8 @@ Events.init({
   cId: {
     type: Sequelize.INTEGER(10),
     references: {
-      model: Companys,
+      // model: Companys,
+      model: VendorData,
       key: 'id',
     }
   }
