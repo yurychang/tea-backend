@@ -158,7 +158,7 @@ router.post('/updatedata', vendorVerification, upload.single('vendorImg'), (req,
   try {
     const data = { success: false, message: { type: 'danger', text: '', url: '', imgmsg: '' } };
     if (req.file) {
-      console.log('path',req.file)
+      console.log('path', req.file)
       switch (req.file.mimetype) {
         case 'image/jpeg':
         case 'image/png':
@@ -278,7 +278,7 @@ router.get('/getvendorderlist', vendorVerification, (req, res) => {
 
 //取得廠商訂單API(單筆詳細)
 router.get('/getvendororder/:orderid', (req, res) => {
-  const sql = "SELECT orderdata.id , orderdata.memberId ,orderdetail.productName ,orderdetail.productPrice ,orderdetail.productAmount FROM orderdata INNER JOIN orderdetail ON orderdata.id=orderdetail.orderId WHERE orderdata.id=?";
+  const sql = "SELECT orderdata.id , orderdata.memberId, orderdata.productState,orderdetail.productName ,orderdetail.productPrice ,orderdetail.productAmount FROM orderdata INNER JOIN orderdetail ON orderdata.id=orderdetail.orderId WHERE orderdata.id=?";
   let orderid = req.params.orderid
   db.query(sql, orderid, (error, results, fields) => {
     if (error) throw error
@@ -302,6 +302,19 @@ router.get('/getvendorlocation/:vendorId', (req, res) => {
   return
 });
 
+//取得營業據點(後台)
+router.get('/getvendorbacklocation', vendorVerification, (req, res) => {
+  const sql = "SELECT `locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
+  let id = req.session.vendorOnlyId
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
 //取得廠商商品API(列表)
 router.get('/getvendorproductlist', vendorVerification, (req, res) => {
   const sql = "SELECT `id`, `title`, `tag`, `classIfy`, `price`, `unit`, `sTime`, `idVendor`, `feaTure`, `img` FROM `commodity` WHERE `idVendor`=?";
@@ -316,7 +329,7 @@ router.get('/getvendorproductlist', vendorVerification, (req, res) => {
 });
 
 //取得廠商商品API(前端列表)
-router.get('/getvendorproductlistuseparam/:vendorid',  (req, res) => {
+router.get('/getvendorproductlistuseparam/:vendorid', (req, res) => {
   const sql = "SELECT `id`, `title`, `tag`, `classIfy`, `price`, `unit`, `sTime`, `idVendor`, `feaTure`, `img` FROM `commodity` WHERE `idVendor`=?";
   let id = req.params.vendorid
   db.query(sql, id, (error, results, fields) => {
@@ -328,8 +341,22 @@ router.get('/getvendorproductlistuseparam/:vendorid',  (req, res) => {
   return
 });
 
+//取得活動列表API(後台)
+router.get('/getvendorbackevents', vendorVerification, (req, res) => {
+  const sql = "SELECT `id`,`title`, `content`, `price`, `location` FROM `events` WHERE cId=?";
+  let id = req.session.vendorOnlyId
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
+
 //取得活動列表(前端列表)
-router.get('/getvendoreventlist/:vendorid',  (req, res) => {
+router.get('/getvendoreventlist/:vendorid', (req, res) => {
   const sql = "SELECT `title`, `content`, `price`, `location` FROM `events` WHERE cId=?";
   let id = req.params.vendorid
   db.query(sql, id, (error, results, fields) => {
@@ -349,15 +376,15 @@ router.get('/logout', function (req, res) {
 })
 
 // 廠商發送訊息
-router.post('/BackendAddMsg',(req, res) => {
+router.post('/BackendAddMsg', (req, res) => {
   try {
     const data = { success: false, message: { type: 'danger', text: '' } };
     data.body = req.body;
     console.log('req.body', req.body)
 
-    let id=req.session.venderOnlyId
+    let id = req.session.venderOnlyId
     const sql = "INSERT INTO noticelist (vendorId,title,content,status) VALUE(?,?,?,?)";
-    db.query(sql, [ req.body.vendorId, req.body.title, req.body.content, req.body.status ], (error, results, fields) => {
+    db.query(sql, [req.body.vendorId, req.body.title, req.body.content, req.body.status], (error, results, fields) => {
       if (error) { throw error }
       if (results.affectedRows === 1) {
         data.success = true;
