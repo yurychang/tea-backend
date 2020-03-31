@@ -53,17 +53,21 @@ router.get('/getvendorpage', (req, res) => {
 
 
 // get Events
-//廠商註冊API
+//訂單insert
 router.post('/neworderdata', (req, res) => {
   try {
     const data = req.body
+    console.log(data)
     let selectQuery = "SELECT id, title, price FROM commodity WHERE"
     data.detail.forEach(item => selectQuery += ` id = ${item.pId} or`)
-    const newSelectQuery = selectQuery.slice(0, selectQuery.length - 2)
+    const newSelectQuery = selectQuery.slice(0, selectQuery.length - 3)
+
     db.query(newSelectQuery, (error, results, fields) => {
       let totalPrice = 0
       const detailAry = []
+      console.log(data.detail)
       data.detail.forEach(item => {
+        console.log(results)
         results.forEach(product => {
           if (product.id === item.pId) {
             const price = item.amount * product.price
@@ -72,19 +76,27 @@ router.post('/neworderdata', (req, res) => {
           }
         })
       })
+
       const insertOrderData = 'INSERT INTO `orderdata`(`memberId`, `vendorId`, `totalPrice`, `coupon`) VALUES (?, ?, ?, ?)'
       db.query(insertOrderData, [3, data.vendorId, totalPrice, data.couponId], (error, results, fields) => {
-        // console.log(results)
+
         const insertOrderDetail = "INSERT INTO `orderdetail`(`orderId`, `productName`, `productPrice`, `productAmount`) VALUES (?, ?, ?, ?)"
+        const datainsertId = results.insertId
         detailAry.forEach(item => {
-          db.query(insertOrderDetail, [results.insertId, ...item], (error, results, fields) => {
-            console.log(results)
+          db.query(insertOrderDetail, [datainsertId, ...item], (error, results, fields) => {
+            console.log('results.orderId', results)
+
           })
         })
+        const insterOrderPayInfo = "INSERT INTO payinfo(orderId, orderer, ordererPhone, ordererAddress, addressee, addresseePhone, address)VALUES(?,?,?,?,?,?,?)"
+        db.query(insterOrderPayInfo, [datainsertId, data.orderer, data.ordererPhone, data.ordererAddress, data.addressee, data.addresseePhone, data.address], (error, results, fields) => {
+          console.log(error)
+          console.log('payInfo', results)
+        })
       })
-
       // insert buy info
       // write
+
     })
 
     res.json('neworderdata')
@@ -102,12 +114,10 @@ router.post('/try-logindata', (req, res) => {
   try {
     const data = { success: false, message: { type: 'danger', text: '' } };
     data.body = req.body;
-    console.log('req.body', req.body)
     const sql = "SELECT id,vendorAccount,vendorPassword FROM vendordata WHERE vendorAccount=?";
     db.query(sql, req.body.vendorAccount, (error, results, fields) => {
       if (error) { throw error }
       if (results.length === 1) {
-        console.log(results)
         if (req.body.vendorPassword === results[0].vendorPassword) {
           data.success = true;
           data.message.type = 'primary';
@@ -140,18 +150,8 @@ router.get('/getvendordata', vendorVerification, (req, res) => {
     results[0].vendorBanner = "http://localhost:3333/images/" + results[0].vendorBanner
     console.log(results)
     res.json(results);
-
   });
   return
 });
-
-
-
-
-
-//更新廠商資料API
-
-
-
 
 module.exports = router;

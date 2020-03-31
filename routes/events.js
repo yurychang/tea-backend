@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { Companys, Events } = require("../migrations/associations")
+const { Events, VendorData } = require("../migrations/associations")
 const Sequelize = require('sequelize')
 const { msgSuccess, msgFail } = require('../libs/resMsg')
 const addEvent = require('../Models/event/addEvent')
@@ -40,9 +40,12 @@ router.get('/get', async function (req, res) {
   try {
     let events = await Events.findAll({
       include: [{
-        model: Companys,
+        // model: Companys,
+        model: VendorData,
+        as: 'companys',
         where: { id: Sequelize.col('events.cId') },
-        attributes: ['id', 'username']
+        // attributes: ['id', 'username']
+        attributes: ['id', ['vendorName', 'username']]
       }]
     })
     events = events.map(event => {
@@ -51,6 +54,7 @@ router.get('/get', async function (req, res) {
     })
     res.json(msgSuccess(events))
   } catch (error) {
+    console.log(error)
     res.json(msgFail())
   }
 });
