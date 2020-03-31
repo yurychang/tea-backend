@@ -404,4 +404,44 @@ router.post('/BackendAddMsg', (req, res) => {
 
 });
 
+// 廠商取得訊息
+router.get('/getMsg', vendorVerification, (req, res) => {
+  const sql = "SELECT `title`, `content`,`id` FROM `noticelist` WHERE `vendorId`=?";
+  let id = req.session.vendorOnlyId
+  console.log( id)
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
+  });
+  return
+});
+
+// 廠商訊息推播狀態更新
+router.put('/updateMsg',upload.none() , vendorVerification , (req, res) => {
+  try {
+    const data = { success: false, message: { type: 'danger', text: '' } };
+    data.body = req.body;
+    console.log('req.body', req.body)
+    
+    let id=req.session.venderOnlyId
+    const sql = "UPDATE noticeList SET `status` = ?  WHERE `id` = ? ";
+    db.query(sql, [ req.body.status,req.body.id ], (error, results) => {
+      if (error) { throw error }
+      if (results.length === 1) {
+        data.success = true;
+        data.message.type = 'primary';
+        data.message.text = '狀態更新'
+      } else {
+        data.message.text = '狀態更新失敗'
+      }
+      return res.json(data);
+    });
+  } catch (error) {
+    throw error
+  }
+
+});
+
 module.exports = router;
