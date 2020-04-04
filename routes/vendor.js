@@ -209,7 +209,7 @@ router.post('/updatedata', vendorVerification, upload.single('vendorImg'), (req,
 
 //更新關於我跟Banner
 
-router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
+router.post('/updateabout', vendorVerification, upload.single('vendorBanner'), (req, res) => {
   let venderObj = {
     vendorAbout: req.body.vendorAbout,
   }
@@ -243,7 +243,7 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
       data.message.imgmsg = '';
     }
     const sql = "UPDATE vendordata SET ?  WHERE id=?";
-    db.query(sql, [venderObj, req.body.localId], (error, results, fields) => {
+    db.query(sql, [venderObj, req.session.vendorOnlyId], (error, results, fields) => {
       if (error) { throw error }
       if (results.length === 1) {
         data.success = true;
@@ -264,11 +264,14 @@ router.post('/updateabout', upload.single('vendorBanner'), (req, res) => {
 
 //取得廠商訂單API(列表)
 router.get('/getvendorderlist', vendorVerification, (req, res) => {
-  const sql = "SELECT `id`,`memberId`, `vendorId`, `totalPrice`,`orderId` FROM `orderdata` WHERE vendorId=?";
+  const sql = "SELECT `id`,`memberId`, `vendorId`, `totalPrice`,`orderId`,`trackingCode`,`productState`,`createdAt` FROM `orderdata` WHERE vendorId=?";
   let id = req.session.vendorOnlyId
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
-    res.json(results);
+    data = results.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    });
+    res.json(data);
   });
   return
 });
@@ -298,6 +301,20 @@ router.get('/getvendorlocation/:vendorId', (req, res) => {
     console.log(results)
     res.json(results);
 
+  });
+  return
+});
+
+//新增據點(後台)
+router.post('/addvendorlocation', vendorVerification, (req, res) => {
+  const sql = "INSERT INTO location (vendorId,locationName,locationAddress,locationPhone) VALUES (?,?,?,?)";
+  let id = req.session.vendorOnlyId
+  const locationdata = [id, req.body.locationName, req.body.locationAddress, req.body.locationPhone]
+  console.log(locationdata)
+  db.query(sql, locationdata, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
   });
   return
 });
@@ -405,7 +422,7 @@ router.post('/BackendAddMsg', (req, res) => {
 router.get('/getMsg', vendorVerification, (req, res) => {
   const sql = "SELECT `title`, `content`,`id` FROM `noticelist` WHERE `vendorId`=?";
   let id = req.session.vendorOnlyId
-  console.log( id)
+  console.log(id)
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
     console.log(results)
@@ -416,15 +433,15 @@ router.get('/getMsg', vendorVerification, (req, res) => {
 });
 
 // 廠商訊息推播狀態更新
-router.put('/updateMsg',upload.none() , vendorVerification , (req, res) => {
+router.put('/updateMsg', upload.none(), vendorVerification, (req, res) => {
   try {
     const data = { success: false, message: { type: 'danger', text: '' } };
     data.body = req.body;
     console.log('req.body', req.body)
-    
-    let id=req.session.venderOnlyId
+
+    let id = req.session.venderOnlyId
     const sql = "UPDATE noticeList SET `status` = ?  WHERE `id` = ? ";
-    db.query(sql, [ req.body.status,req.body.id ], (error, results) => {
+    db.query(sql, [req.body.status, req.body.id], (error, results) => {
       if (error) { throw error }
       if (results.length === 1) {
         data.success = true;
