@@ -294,7 +294,7 @@ router.get('/getvendororder/:orderid', (req, res) => {
 
 //取得營業據點(前端頁面)
 router.get('/getvendorlocation/:vendorId', (req, res) => {
-  const sql = "SELECT `locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
+  const sql = "SELECT `id`,`locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
   let id = req.params.vendorId
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
@@ -319,9 +319,24 @@ router.post('/addvendorlocation', vendorVerification, (req, res) => {
   return
 });
 
+//刪除據點(後台)
+router.get('/delvendorlocation/:locationid', vendorVerification, (req, res) => {
+  const sql = "DELETE FROM `location` WHERE `vendorId`=? AND`id`=?";
+  let id = req.session.vendorOnlyId
+  let locationid = req.params.locationid
+  const locationdata = [id, locationid]
+  console.log(locationdata)
+  db.query(sql, locationdata, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+  });
+  return
+});
+
 //取得營業據點(後台)
 router.get('/getvendorbacklocation', vendorVerification, (req, res) => {
-  const sql = "SELECT `locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
+  const sql = "SELECT `id`,`locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE vendorId=?";
   let id = req.session.vendorOnlyId
   db.query(sql, id, (error, results, fields) => {
     if (error) throw error
