@@ -321,7 +321,7 @@ router.post('/addvendorlocation', vendorVerification, (req, res) => {
 
 //刪除據點(後台)
 router.get('/delvendorlocation/:locationid', vendorVerification, (req, res) => {
-  const sql = "DELETE FROM `location` WHERE `vendorId`=? AND`id`=?";
+  const sql = "DELETE FROM `location` WHERE `vendorId`=? AND `id`=?";
   let id = req.session.vendorOnlyId
   let locationid = req.params.locationid
   const locationdata = [id, locationid]
@@ -330,6 +330,19 @@ router.get('/delvendorlocation/:locationid', vendorVerification, (req, res) => {
     if (error) throw error
     console.log(results)
     res.json(results);
+  });
+  return
+});
+
+//取得營業據點(單筆+後台)
+router.get('/getvendoronelocation/:locationid', vendorVerification, (req, res) => {
+  const sql = "SELECT `id`,`locationName`,`locationAddress`,`locationPhone` FROM `location` WHERE id=?";
+  let id = req.params.locationid
+  db.query(sql, id, (error, results, fields) => {
+    if (error) throw error
+    console.log(results)
+    res.json(results);
+
   });
   return
 });
